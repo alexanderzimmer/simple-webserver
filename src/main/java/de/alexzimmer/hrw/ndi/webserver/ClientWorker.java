@@ -15,7 +15,7 @@ public class ClientWorker extends Thread {
     private HttpRequest request;
     private HttpResponse response;
 
-    private ClientWorker(Socket socket) {
+    public ClientWorker(Socket socket) {
         this.socket = socket;
     }
 
