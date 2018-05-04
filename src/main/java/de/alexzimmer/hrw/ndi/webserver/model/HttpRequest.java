@@ -13,7 +13,7 @@ public class HttpRequest {
     private String host;
 
     public static HttpRequest fromInputStream(InputStream input) throws IOException {
-        List<String> requestString = new LinkedList<String>();
+        List<String> requestString = new LinkedList<>();
         StringBuffer buffer = new StringBuffer();
         int character;
         while((character = input.read()) != -1) {
@@ -42,4 +42,19 @@ public class HttpRequest {
         System.out.println("Received "+this.method+" to resource \""+this.uri+"\" for host "+this.host+" with HTTP-Version "+this.httpVersion);
     }
 
+    public String getMethod() {
+        return method;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public String getHttpVersion() {
+        return httpVersion;
+    }
+
+    public String getHost() {
+        return host;
+    }
 }
