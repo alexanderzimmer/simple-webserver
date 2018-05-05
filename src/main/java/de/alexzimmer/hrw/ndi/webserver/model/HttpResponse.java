@@ -32,11 +32,11 @@ public class HttpResponse {
         this.responseFile = new File(resourcePath);
         if (!this.responseFile.exists() || !this.responseFile.isFile()) {
             this.status = "404 Not Found";
+            System.out.println("Resource " + resource + " not found in path \"" + resourcePath + "\"");
             this.responseFile = null;
         } else {
             this.status = "200 Ok";
             responseHeaders.put("Content-Type", mimeTypes.getContentType(responseFile));
-            responseHeaders.put("Content-Length", String.valueOf(responseFile.length()));
         }
     }
 
@@ -56,17 +56,34 @@ public class HttpResponse {
     }
 
     public void writeResponse(PrintStream stream) throws IOException {
+        StringBuffer responseBuffer = new StringBuffer();
         stream.print(httpVersion + " " + this.status + newLine);
+        responseBuffer.append(httpVersion + " " + this.status + "\n");
         stream.print(serverVersion + newLine);
-        for (String value : responseHeaders.getKeys()) {
-            stream.print(value + ": " + responseHeaders.get(value) + newLine);
-        }
-        if (responseFile != null) {
-            stream.print(newLine);
-            for (String line : Files.readAllLines(Paths.get(resourcePath))) {
-                stream.println(line);
+        responseBuffer.append(serverVersion + "\n");
+        if (this.status.equals("200 Ok")) {
+            for (String value : responseHeaders.getKeys()) {
+                responseBuffer.append(value + ": " + responseHeaders.get(value) + "\n");
+                stream.print(value + ": " + responseHeaders.get(value) + newLine);
             }
+            if (responseFile != null) {
+                stream.print(newLine);
+                responseBuffer.append("\n");
+                for (String line : Files.readAllLines(Paths.get(resourcePath))) {
+                    responseBuffer.append(line + "\n");
+                    stream.println(line);
+                }
+            }
+        } else {
+            stream.print(newLine);
+            responseBuffer.append("\n");
+            stream.print(status);
+            responseBuffer.append(status);
         }
+        System.out.println("Responded to GET request on resource \"" + resource + "\" with status " + status);
+        System.out.println("RESPONSE WAS SENT TO OUTPUT: >>>>>>");
+        System.out.println(responseBuffer.toString());
+        System.out.println("RESPONSE WAS SENT TO OUTPUT: <<<<<<");
     }
 
 }
