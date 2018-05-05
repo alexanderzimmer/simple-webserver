@@ -1,7 +1,11 @@
 package de.alexzimmer.hrw.ndi.webserver.model;
 
+import de.alexzimmer.hrw.ndi.webserver.exception.InvalidRequestException;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,8 +15,31 @@ public class HttpRequest {
     private String uri;
     private String httpVersion;
     private String host;
+    private HashMap<String, String> requestHeaders = new HashMap<>();
 
-    public static HttpRequest fromInputStream(InputStream input) throws IOException {
+    @NotNull
+    public HttpRequest(@NotNull List<String> raw) throws InvalidRequestException {
+        String line = raw.get(0);
+        String[] splitted = line.split(" ");
+        this.method = splitted[0].toUpperCase();
+        this.uri = splitted[1];
+        this.httpVersion = splitted[2];
+        raw.remove(0);
+
+        for (String entry : raw) {
+            String[] parts = entry.split(" ", 2);
+            this.requestHeaders.put(parts[0].toLowerCase().replace(":", ""), parts[1]);
+        }
+
+        if ((this.host = requestHeaders.get("host")) == null) {
+            throw new InvalidRequestException();
+        }
+
+        System.out.println("Received " + this.method + " to resource \"" + this.uri + "\" for host " + this.host + " with HTTP-Version " + this.httpVersion);
+    }
+
+    @NotNull
+    public static HttpRequest fromInputStream(@NotNull InputStream input) throws IOException {
         List<String> requestString = new LinkedList<>();
         StringBuffer buffer = new StringBuffer();
         int character;
@@ -32,21 +59,11 @@ public class HttpRequest {
         return new HttpRequest(requestString);
     }
 
-    public HttpRequest(List<String> raw) {
-        String line = raw.get(0);
-        String[] splitted = line.split(" ");
-        this.method = splitted[0].toUpperCase();
-        this.uri = splitted[1];
-        this.httpVersion = splitted[2];
-        this.host = raw.get(1).split(" ")[1];
-        System.out.println("Received "+this.method+" to resource \""+this.uri+"\" for host "+this.host+" with HTTP-Version "+this.httpVersion);
-    }
-
     public String getMethod() {
         return method;
     }
 
-    public String getUri() {
+    public String getURI() {
         return uri;
     }
 
