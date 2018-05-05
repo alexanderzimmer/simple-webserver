@@ -8,6 +8,9 @@ public class Entrypoint {
     private static SimpleWebserver server;
 
     public static void main(String[] args) {
+
+        System.out.println(System.getProperty("user.dir"));
+
         final Thread mainThread = Thread.currentThread();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
