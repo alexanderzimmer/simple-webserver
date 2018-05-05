@@ -26,11 +26,16 @@ public class ClientWorker extends Thread {
             this.input = socket.getInputStream();
             this.output = new PrintStream(socket.getOutputStream());
             this.request = HttpRequest.fromInputStream(this.input);
-            this.output.print(request.getHttpVersion() + " 418 I'm a teapot");
+            this.output.print(request.getHttpVersion() + " 200 Ok");
         } catch (IOException e) {
             this.output.print(request.getHttpVersion() + " 500 Internal Server Error");
         } catch (InvalidRequestException e) {
             this.output.print(request.getHttpVersion() + " 400 Bad Request ");
+        } finally {
+            try {
+                output.close();
+            } catch (Exception e) {
+            }
         }
     }
 }
