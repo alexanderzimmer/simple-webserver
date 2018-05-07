@@ -84,10 +84,12 @@ public class HttpResponse {
             stream.print(status);
             responseBuffer.append(status);
         }
-        logger.info("Responded to GET request on resource \"" + resource + "\" with status " + status);
-        logger.info("RESPONSE WAS SENT TO OUTPUT: >>>>>>");
-        logger.info(responseBuffer.toString());
-        logger.info("RESPONSE WAS SENT TO OUTPUT: <<<<<<");
+        logger.info(
+                "Responded to GET request on resource \"" + resource + "\" with status " + status + "\n" +
+                "RESPONSE WAS SENT TO OUTPUT: >>>>>>\n" +
+                responseBuffer.toString() +
+                "\nRESPONSE WAS SENT TO OUTPUT: <<<<<<"
+        );
     }
 
 }
