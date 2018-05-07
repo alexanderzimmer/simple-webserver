@@ -1,5 +1,7 @@
 package de.alexzimmer.hrw.ndi.webserver.model;
 
+import org.apache.log4j.Logger;
+
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.nio.file.Paths;
 
 public class HttpResponse {
 
+    private final static Logger logger = Logger.getLogger(HttpResponse.class);
     private static final String contentDirName = "content";
 
     private static final String httpVersion = "Http/1.1";
@@ -32,9 +35,10 @@ public class HttpResponse {
         this.responseFile = new File(resourcePath);
         if (!this.responseFile.exists() || !this.responseFile.isFile()) {
             this.status = "404 Not Found";
-            System.out.println("Resource " + resource + " not found in path \"" + resourcePath + "\"");
+            logger.info("Resource " + resource + " not found in path \"" + resourcePath + "\"");
             this.responseFile = null;
         } else {
+            logger.debug("Resource " + resource + " found in path \"" + resourcePath + "\"");
             this.status = "200 Ok";
             responseHeaders.put("Content-Type", mimeTypes.getContentType(responseFile));
         }
@@ -80,10 +84,10 @@ public class HttpResponse {
             stream.print(status);
             responseBuffer.append(status);
         }
-        System.out.println("Responded to GET request on resource \"" + resource + "\" with status " + status);
-        System.out.println("RESPONSE WAS SENT TO OUTPUT: >>>>>>");
-        System.out.println(responseBuffer.toString());
-        System.out.println("RESPONSE WAS SENT TO OUTPUT: <<<<<<");
+        logger.info("Responded to GET request on resource \"" + resource + "\" with status " + status);
+        logger.info("RESPONSE WAS SENT TO OUTPUT: >>>>>>");
+        logger.info(responseBuffer.toString());
+        logger.info("RESPONSE WAS SENT TO OUTPUT: <<<<<<");
     }
 
 }

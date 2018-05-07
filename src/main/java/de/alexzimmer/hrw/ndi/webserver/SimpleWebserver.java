@@ -1,11 +1,15 @@
 package de.alexzimmer.hrw.ndi.webserver;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class SimpleWebserver {
+
+    private final static Logger logger = Logger.getLogger(SimpleWebserver.class);
 
     private final int port;
     private final ServerSocket socket;
@@ -22,7 +26,7 @@ public class SimpleWebserver {
                 new ClientWorker(socket.accept()).run();
             } catch(SocketTimeoutException e) {}
         }
-        System.out.println("Finished Listening!");
+        logger.info("Finished Listening - Server is ready for shutdown");
     }
 
     public int getPort() {

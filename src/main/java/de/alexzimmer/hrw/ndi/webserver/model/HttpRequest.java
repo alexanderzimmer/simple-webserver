@@ -1,6 +1,7 @@
 package de.alexzimmer.hrw.ndi.webserver.model;
 
 import de.alexzimmer.hrw.ndi.webserver.exception.InvalidRequestException;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -10,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HttpRequest {
+
+    private final static Logger logger = Logger.getLogger(HttpRequest.class);
 
     private String method;
     private String uri;
@@ -35,7 +38,7 @@ public class HttpRequest {
             throw new InvalidRequestException();
         }
 
-        System.out.println("Received " + this.method + " to resource \"" + this.uri + "\" for host " + this.host + " with HTTP-Version " + this.httpVersion);
+        logger.info("Received " + this.method + " to resource \"" + this.uri + "\" for host " + this.host + " with HTTP-Version " + this.httpVersion);
     }
 
     @NotNull
