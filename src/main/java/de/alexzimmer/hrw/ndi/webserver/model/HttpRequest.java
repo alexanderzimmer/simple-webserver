@@ -22,8 +22,8 @@ public class HttpRequest {
 
     @NotNull
     public HttpRequest(@NotNull List<String> raw) throws InvalidRequestException {
-        String line = raw.get(0);
-        String[] splitted = line.split(" ");
+        String rawLine = raw.get(0);
+        String[] splitted = rawLine.split(" ");
         this.method = splitted[0].toUpperCase();
         this.uri = splitted[1];
         this.httpVersion = splitted[2];
@@ -38,6 +38,7 @@ public class HttpRequest {
             throw new InvalidRequestException();
         }
 
+        logger.info("Raw Request: "+rawLine);
         logger.info("Received " + this.method + " to resource \"" + this.uri + "\" for host " + this.host + " with HTTP-Version " + this.httpVersion);
     }
 
