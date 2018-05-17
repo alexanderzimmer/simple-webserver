@@ -36,6 +36,7 @@
 
 
     <build>
+        <finalName>webserver</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
